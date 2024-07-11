@@ -14,11 +14,15 @@ def analyze():
     args = request.args
     print("args are ", args)
     
-    
-    
-    # call a function from pipeline.py file here that 
-    # (1) gets the url for google street view
-    # (2) passes it to detect.py to create instance of our model and detect for needed reqs
+    try:
+        lat = float(args.get("lat"))
+        lng = float(args.get("lng"))
+        print("calling analyze_location with ", lat, lng)
+        results = pipeline.analyze_location(lat, lng, GCP_MAPS_KEY) # works
+        return jsonify(results)
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return {"error": "Failed to fetch street view images"}
 
 # we run our application through this line
 if __name__ == "__app__":
