@@ -6,23 +6,14 @@ const IssueSection = () => {
   return (
     <div className="
           min-h-screen
-          px-8
+          mb-12
         ">
         <div className="
             flex 
             flex-col
+            gap-y-10
             ">
             <IssueDisplay />
-            <div className="
-              text-xl
-              font-semibold
-              flex
-              justify-start
-              px-2
-              py-2
-            ">
-              Laporkan masalah infrastruktur
-            </div>
             <IssueForm />
           </div>
         </div>

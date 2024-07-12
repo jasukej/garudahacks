@@ -8,6 +8,7 @@ import { FaWalking } from 'react-icons/fa'
 import AnalyzeModal from './components/modals/AnalyzeModal'
 import useAnalyzeModal from './hooks/useAnalyzeModal'
 import IssueSection from './components/IssueSection'
+import MapDisplay from './components/MapDisplay'
 
 const defaultPosition:Location = {
   lat: -6.21154400,
@@ -105,10 +106,10 @@ function App() {
           </div>
         </div>
         </div>
+        <MapDisplay />
         <div>
         {/* Map Component */}
-        <div 
-        ref={mapRef}
+        <div
         className="
           min-h-screen
           mb-4
@@ -117,10 +118,12 @@ function App() {
           flex-col
           gap-y-4
         "> 
-          <div className="
+          <div 
+          ref={mapRef}
+          className="
           
           ">
-            Select an area on the map.
+            Tekan titik yang ingin anda analisa di peta.
           </div>
           <Map 
             position={position}

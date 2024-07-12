@@ -42,6 +42,10 @@ const IssueForm = () => {
   };
 
   return (
+    <div className="w-full flex flex-col items-center justify-center">
+        <div className="font-semibold flex mb-4 text-xl ml-2">
+        Laporkan masalah infrastruktur
+        </div>
     <div className="
         bg-white
         border
@@ -54,6 +58,7 @@ const IssueForm = () => {
         pb-8
         flex
         flex-col
+        max-w-[30rem]
         gap-y-4
     ">
         <div className="
@@ -142,6 +147,7 @@ const IssueForm = () => {
         ">
         Kirim laporan
       </div>
+    </div>
     </div>
   );
 };
