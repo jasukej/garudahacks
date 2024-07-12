@@ -20,7 +20,7 @@ def generate(detections):
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=messages,
-        max_tokens=250
+        max_tokens=280
     )
     print(response)
 

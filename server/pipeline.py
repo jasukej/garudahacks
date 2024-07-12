@@ -88,7 +88,8 @@ def analyze_location(lat, lng, api_key):
             'hasVendors': detected_dict['hasVendors'],
             'hasParkedVehicles': detected_dict['hasParkedVehicles'],
             'hasTactilePath': detected_dict['hasTactilePath'],
-            'title': 'Trotoar kurang memadai'
+            'title': 'Trotoar kurang memadai',
+            'imgURL': img_url
         }
     else:
         return {"error: Failed to fetch street view images"}

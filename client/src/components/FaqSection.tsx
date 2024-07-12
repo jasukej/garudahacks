@@ -27,13 +27,13 @@ const FaqSection = () => {
             </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-2">
-            <AccordionTrigger>Bagaimana saya bisa mengikuti status keluhan?</AccordionTrigger>
+            <AccordionTrigger>Bagaimana cara melihat status keluhan?</AccordionTrigger>
             <AccordionContent>
             Begitu keluhan sudah ditangani, akan ada email dan notifikasi yang dikirim ke akun anda.
             </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-3">
-            <AccordionTrigger>Bagaimana memberi masukan untuk JalanKami?</AccordionTrigger>
+            <AccordionTrigger>Bagaimana cara memberi masukan?</AccordionTrigger>
             <AccordionContent>
             Tekan tombol 'Beri Masukan' yang dicantumkan dibawah situs ini.
             </AccordionContent>

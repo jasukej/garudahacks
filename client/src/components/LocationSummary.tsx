@@ -14,7 +14,7 @@ const LocationSummary = () => {
             Peta interaktif
         </div>
         <div className="font-light text-start">
-            Tekan penanda di peta untuk mempelajari lebih lanjut.
+            Tekan penanda di peta untuk melihat detil.
         </div>
     <div 
     onClick={summarizeModal.toggleModal}

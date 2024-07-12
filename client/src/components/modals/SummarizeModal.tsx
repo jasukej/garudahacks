@@ -208,7 +208,9 @@ const SummarizeModal = () => {
         bodyContent = (
             <div className="
                 flex 
-                flex-col 
+                flex-col
+                max-w-full
+                overflow-y-scroll
                 gap-8"
             >
                 {!summary ? 

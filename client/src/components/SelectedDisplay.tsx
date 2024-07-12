@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter, DrawerClose } from './shadcn/ui/drawer'
 import { Detection } from './MapDisplay';
-import { FaRoadCircleXmark } from "react-icons/fa6";
+import { FaRoadCircleXmark, FaShop } from "react-icons/fa6";
 import { FaRoadBarrier } from "react-icons/fa6";
 import { MdOutlineNotAccessible } from "react-icons/md";
 import { FaCarOn } from "react-icons/fa6";
@@ -15,47 +15,38 @@ interface SelectedDisplayProps {
 
 const SelectedDisplay = ({ detection, isOpen, onClose }:SelectedDisplayProps) => {
     const panoramaRef = useRef<HTMLDivElement | null>(null);
+    const placesRef = useRef<HTMLDivElement | null>(null);
     const [places, setPlaces] = useState<any[]>([]);
 
     useEffect(() => {
-        if (isOpen && panoramaRef.current && detection) {
+        console.log(isOpen, detection)
+        if (isOpen && detection && panoramaRef.current) {
             const { latitude, longitude } = detection.location;
     
-            const panorama = new google.maps.StreetViewPanorama(panoramaRef.current, {
-            position: { lat: latitude, lng: longitude },
-            pov: { heading: 165, pitch: 0 },
-            zoom: 1,
+            new google.maps.StreetViewPanorama(panoramaRef.current, {
+              position: { lat: latitude, lng: longitude },
+              pov: { heading: 165, pitch: 0 },
+              zoom: 1,
             });
+            
+            // //@ts-ignore
+            // const service = new google.maps.places.PlacesService(placesRef.current);
+            // const request = {
+            //     location: { lat: latitude, lng: longitude },
+            //     radius: 500,
+            //     types: ['school', 'transit_station', 'train_station'],
+            // };
+
+            // service.nearbySearch(request, (results, status) => {
+            //     if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+            //         setPlaces(results);
+            //     }
+            // });
+            // console.log(places)
         }
-      }, [isOpen, detection]);
+      }, [isOpen, detection, panoramaRef]);
 
   if (!detection) return null;
-
-//   useEffect(() => {
-//     if (isOpen && detection && panoramaRef.current) {
-//         const { latitude, longitude } = detection.location;
-
-//       new google.maps.StreetViewPanorama(panoramaRef.current, {
-//         position: { lat: latitude, lng: longitude },
-//         pov: { heading: 165, pitch: 0 },
-//         zoom: 1,
-//       });
-
-//       const service = new google.maps.places.PlacesService(panoramaRef.current);
-
-//       const request = {
-//         location: { lat: latitude, lng: longitude },
-//         radius: 500,
-//         type: ['school', 'transit_station'],
-//       };
-
-//       service.nearbySearch(request, (results, status) => {
-//         if (status === google.maps.places.PlacesServiceStatus.OK && results) {
-//           setPlaces(results);
-//         }
-//       });
-//     }
-//   }, [isOpen, detection]);
 
   return (
     <Drawer open={isOpen} onOpenChange={onClose}>
@@ -73,7 +64,7 @@ const SelectedDisplay = ({ detection, isOpen, onClose }:SelectedDisplayProps) =>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
-            <DrawerTitle>Ramah pejalan</DrawerTitle>
+            <DrawerTitle>{detection.hasSidewalk ? 'Ramah pejalan' : 'Tidak ramah pejalan'}</DrawerTitle>
             <DrawerDescription className="text-neutral-700">
                 {detection.title}
             </DrawerDescription>
@@ -99,6 +90,7 @@ const SelectedDisplay = ({ detection, isOpen, onClose }:SelectedDisplayProps) =>
                     flex-col
                     gap-y-1
                     w-[75%]
+                    text-sm
                 ">
                 {detection.hasCracks && 
                 <div className="flex flex-row gap-x-2">
@@ -108,7 +100,7 @@ const SelectedDisplay = ({ detection, isOpen, onClose }:SelectedDisplayProps) =>
                 {detection.hasObstacles && 
                 <div className="flex flex-row gap-x-2">
                     <FaRoadBarrier size={20}/>
-                    Adanya benda-benda penghambat
+                    Adanya benda penghambat
                 </div>}
                 {detection.hasObstacles && 
                 <div className="flex flex-row gap-x-2">
@@ -117,7 +109,7 @@ const SelectedDisplay = ({ detection, isOpen, onClose }:SelectedDisplayProps) =>
                 </div>}
                 {detection.hasVendors && 
                 <div className="flex flex-row gap-x-2">
-                    <FaRoadCircleXmark size={20}/>
+                    <FaShop size={20}/>
                     Dihalangi pendagang kaki lima
                 </div>}
                 {detection.hasTactilePath && 
@@ -131,19 +123,25 @@ const SelectedDisplay = ({ detection, isOpen, onClose }:SelectedDisplayProps) =>
           <div className="py-2">
             <div style={{ width:'100%', height:'250px'}} ref={panoramaRef}></div>
           </div>
-          <div className="
+          <div
+          className="
             border
             rounded-sm p-4">
-            <div className="flex-row flex bg-white items-center gap-x-1 mb-2">
+            <div className="flex-row flex bg-white items-center gap-x-2 mb-2">
                 <div className="bg-blue-500 p-1 rounded-md">
-                <FaBusAlt color="white" size={16}/>
+                <FaBusAlt color="white" size={14}/>
                 </div>
                 <div className="font-bold">
-                    Fasilitas umum dalam 500m
+                    Fasilitas umum sekitar
                 </div>
             </div>
-            <div>
-              query for all (1) transportation stations, and (2) schools in the area and display here
+            <div className="font-light">
+              <div>
+                100m &nbsp; |  &nbsp;Stasiun Manggarai
+              </div>
+              <div>
+                400m  &nbsp;|  &nbsp;SMAN 2 Jakarta
+              </div>
             </div>
           </div>
         </div>

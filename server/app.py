@@ -20,6 +20,7 @@ def analyze():
         lng = float(args.get("lng"))
         print("calling analyze_location with ", lat, lng)
         results = pipeline.analyze_location(lat, lng, GCP_MAPS_KEY) # works
+        print(results)
         return jsonify(results)
     except Exception as e:
         print(f"Error occurred: {e}")

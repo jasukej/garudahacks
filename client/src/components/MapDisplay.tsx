@@ -46,6 +46,7 @@ export type Detection = {
         longitude:number
     }
     title:string,
+    imgURL?:string
 }
 
 const MapDisplay = () => {
@@ -98,7 +99,7 @@ const MapDisplay = () => {
             <GoogleMap 
                 mapContainerStyle={containerStyle}
                 center={defaultCenter}
-                zoom={12}
+                zoom={13}
                 options={options}
                 onLoad={map => setMap(map)}
             >
