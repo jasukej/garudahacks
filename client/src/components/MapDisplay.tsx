@@ -4,6 +4,7 @@ import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import LocationSummary from './LocationSummary';
+import SelectedDisplay from './SelectedDisplay';
 
 const containerStyle = {
     width: '100%',
@@ -40,7 +41,10 @@ export type Detection = {
     hasSidewalk:boolean,
     hasTactilePath:boolean,
     hasVendors:boolean,
-    location:boolean
+    location:{
+        latitude:number,
+        longitude:number
+    }
     title:string,
 }
 
@@ -49,7 +53,11 @@ const MapDisplay = () => {
     const [detections, setDetections] = useState<Detection[]>([]);
     const [selectedDetection, setSelectedDetection] = useState<Detection | null>(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    const [center, setCenter] = useState<Location>(defaultCenter);
+
+    const closeDrawer = () => {
+        setIsDrawerOpen(false);
+        setSelectedDetection(null);
+    };
 
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
@@ -76,8 +84,6 @@ const MapDisplay = () => {
         fetchDetections();
     }, [])
 
-    console.log(detections.length);
-
     const handleMarkerClick = (detection:Detection) => {
         setSelectedDetection(detection);
         setIsDrawerOpen(true);
@@ -88,6 +94,7 @@ const MapDisplay = () => {
     className="min-h-screen"
     >
         {isLoaded ? (
+            <div>
             <GoogleMap 
                 mapContainerStyle={containerStyle}
                 center={defaultCenter}
@@ -110,10 +117,16 @@ const MapDisplay = () => {
                         )
                 })}
             </GoogleMap>
+            <LocationSummary />
+            </div>
         ) : (
             <div> Loading... </div>
         )}
-        <LocationSummary />
+        <SelectedDisplay 
+            detection={selectedDetection}
+            isOpen={isDrawerOpen}
+            onClose={closeDrawer}
+        />
     </div>
   )
 }

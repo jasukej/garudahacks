@@ -37,7 +37,7 @@ export interface Location {
 }
 
 interface MapProps {
-  position: Location,
+  position: Location | null,
   setPosition: (position: Location) => void;
 }
 

@@ -3,12 +3,12 @@ const Footer = () => {
       <footer className="
         p-4 
         z-10
-        bg-gray-100 
+        bg-neutral-800 
         w-full 
         text-center 
         font-light
-        text-black">
-        <div>Dibuat di <span className="font-semibold cursor-pointer hover:text-zinc-600">GarudaHacks 2024</span> |&nbsp;
+        text-neutral-200">
+        <div>Dibuat di <span className="font-semibold cursor-pointer hover:text-red-600">GarudaHacks 2024</span> |&nbsp;
         <a
             href=""
             className="

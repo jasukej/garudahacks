@@ -49,7 +49,7 @@ const IssueDisplay = () => {
             justify-between
             items-start
             text-white
-            mb-6
+            mb-4
         ">
             <div className="
                 font-semibold
@@ -69,35 +69,64 @@ const IssueDisplay = () => {
                 Daerah Jakarta Barat
             </div>
         </div>
+        <div className="flex flex-row pt-2 gap-x-4 overflow-x-scroll">
         {issues.map((issue, index) => (
-            <div 
+            <div
             key={index}
             className="
-                rounded-md
-                flex-row
-                p-4
-                text-black
-                bg-white
+              rounded-md
+              flex
+              flex-col
+              text-black
+              !aspect-square
+              w-[180px]
+              min-w-[180px]
+              relative
+              overflow-hidden
+              bg-white
+              shadow-lg
+              cursor-pointer
+              hover:-translate-y-2
+              hover:transition
+              hover:ease-in-out
             "
+            style={{
+              backgroundImage: `url(${issue.imgURL})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat'
+            }}
             >
-                {issue.imgURL && 
-                <div>
-                    <img src="" />
+                <div className="absolute opacity-80 w-full h-full bg-gradient-to-b from-slate-500 to-black">
                 </div>
-                }
                 <div className="
                     flex 
                     flex-col 
                     justify-between
                     items-start
                     gap-y-4
+                    p-4
+                    z-10
+                    h-full
                 ">
+                    <div className={`
+                    px-2
+                    py-1
+                    ${issue.urgency == 'mendesak' ? 'bg-red-700' : issue.urgency == 'SEDANG' ? 'bg-amber-600' : 'bg-green-600'}
+                    text-xs
+                    rounded-full
+                    text-white
+                    uppercase
+                    flex
+                    `}>
+                        {issue.urgency}
+                    </div>
                     <div className="
                         flex
                         flex-col
                         gap-y-1
                     ">
-                    <div className="flex font-semibold">
+                    <div className="flex text-start text-white font-semibold">
                         {issue.title}
                     </div>
                     <AddressDisplay 
@@ -105,20 +134,26 @@ const IssueDisplay = () => {
                         lng={issue.location.longitude}
                     />
                     </div>
-                    <div className="
-                    px-3
-                    py-1.5
-                    bg-red-600
-                    text-xs
-                    rounded-full
-                    text-white
-                    flex
-                    ">
-                        MENDESAK
-                    </div>
                 </div>
             </div>
         ))}
+        </div>
+
+        <div className="
+            border-black 
+            border-[1.5px]
+            rounded-lg
+            bg-white
+            w-full 
+            flex
+            mt-6
+            py-2
+            justify-center
+            hover:bg-neutral-200
+            cursor-pointer
+        ">
+            Lihat 12 isu lainnya
+        </div>
     </div>
   )
 }

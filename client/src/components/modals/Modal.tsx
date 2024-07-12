@@ -73,7 +73,8 @@ const Modal = ({
                     lg:h-auto
                     md:h-auto
                     relative
-                    rounded-lg
+                    rounded-t-lg
+                    md:rounded-lg
                     shadow-lg
                     border-0
                     flex
@@ -134,6 +135,7 @@ const Modal = ({
                                 flex
                                 justify-center
                                 bg-red-700
+                                rounded-md
                                 text-white
                                 font-semibold
                                 w-full

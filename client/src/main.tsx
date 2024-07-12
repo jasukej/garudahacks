@@ -6,12 +6,14 @@ import Navbar from './components/Navbar.tsx'
 import { MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
 import SummarizeModal from './components/modals/SummarizeModal.tsx'
+import AnalyzeModal from './components/modals/AnalyzeModal.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <MantineProvider>
       <Navbar />
       <SummarizeModal />
+      <AnalyzeModal />
       <App />
     </MantineProvider>
   </React.StrictMode>,

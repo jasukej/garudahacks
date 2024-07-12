@@ -44,7 +44,7 @@ const IssueForm = () => {
   return (
     <div className="w-full flex flex-col items-center justify-center">
         <div className="font-semibold flex mb-4 text-xl ml-2">
-        Laporkan masalah infrastruktur
+        Ingin melaporkan masalah infrastruktur?
         </div>
     <div className="
         bg-white

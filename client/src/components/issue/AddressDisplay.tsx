@@ -46,14 +46,15 @@ const AddressDisplay = ({ lat, lng }:AddressDisplayProps) => {
 
   return (
     <div className="
-        text-red-500 
+        text-neutral-200
         flex
+        text-xs
         flex-row
         items-center
         gap-x-1
     ">
-      <FaLocationDot size={18}/>
-      <div>{sliceAddress(address)}</div>
+      <FaLocationDot size={14}/>
+      <div className="truncate max-w-[130px]">{sliceAddress(address)}</div>
     </div>
   );
 };

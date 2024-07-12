@@ -9,19 +9,25 @@ import AnalyzeModal from './components/modals/AnalyzeModal'
 import useAnalyzeModal from './hooks/useAnalyzeModal'
 import IssueSection from './components/IssueSection'
 import MapDisplay from './components/MapDisplay'
-
-const defaultPosition:Location = {
-  lat: -6.21154400,
-  lng: 106.84517200
-}
+import FaqSection from './components/FaqSection'
 
 function App() {
-  const [position, setPosition] = useState<Location>(defaultPosition);
+  
   const mapRef = useRef<HTMLDivElement>(null);
+  const faqRef = useRef<HTMLDivElement>(null);
 
   const scrollToMap = () => {
     if (mapRef.current) {
       mapRef.current.scrollIntoView({ 
+        block: 'center',
+        behavior: 'smooth' 
+      });
+    }
+  }
+
+  const scrollToFaq = () => {
+    if (faqRef.current) {
+      faqRef.current.scrollIntoView({ 
         block: 'center',
         behavior: 'smooth' 
       });
@@ -38,8 +44,6 @@ function App() {
   // useEffect(() => {
   //   fetchAPI();
   // }, [])
-
-  const { isOpen, toggleModal } = useAnalyzeModal();
   
   return (
     <div className="
@@ -55,16 +59,23 @@ function App() {
         <div className="
         absolute
         top-0
-        h-
       ">
       </div>
         {/* LANDING */}
-        <div className="
+        <div 
+        style={{
+          backgroundImage: 'url(src/assets/background_alt.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+        className="
           min-h-[70vh]
           items-center
           justify-center
           flex
+          relative
         ">
+        
         <div className="
           flex
           flex-col
@@ -72,18 +83,29 @@ function App() {
           gap-y-4
         ">
           <div className="
-            text-4xl
-            text-[#D72D2D]
-            font-black
+            flex
+            flex-col
+            gap-y-1
           ">
-            jalankami
+            <div className="
+              text-4xl
+              text-[#D72D2D]
+              font-black
+            ">
+              jalankami
+            </div>
+            <div className="
+              text-black
+              text-sm
+            ">
+              Membangun Jakarta ramah pejalan
+            </div>
           </div>
           <div className="
-            text-gray-700
-            text-sm
+            flex
+            flex-col
+            gap-y-3
           ">
-            Membangun Jakarta ramah pejalan
-          </div>
           <div 
           onClick={scrollToMap}
           className="
@@ -104,88 +126,38 @@ function App() {
           ">
             Laporkan isu
           </div>
-        </div>
-        </div>
-        <MapDisplay />
-        <div>
-        {/* Map Component */}
-        <div
-        className="
-          min-h-screen
-          mb-4
-          px-8
-          flex
-          flex-col
-          gap-y-4
-        "> 
           <div 
-          ref={mapRef}
+          onClick={scrollToFaq}
           className="
-          
-          ">
-            Tekan titik yang ingin anda analisa di peta.
-          </div>
-          <Map 
-            position={position}
-            setPosition={setPosition}
-          />
-          {/* User buttons */}
-          <div 
-          className="
+            rounded-full
+            px-2
+            py-2
+            bg-white
+            border-black
+            border-[1.5px]
             flex
-            flex-col
-            gap-x-auto
-            w-full
-            justify-between
-            gap-y-2
+            w-[12rem]
+            justify-center
+            items-center
+            text-black
+            cursor-pointer
+            hover:bg-neutral-200
+            active:opacity-100
           ">
-            <div 
-            onClick={toggleModal}
-            className="
-              border
-              border-grey-800
-              flex
-              flex-row
-              gap-x-2
-              items-center
-              justify-center
-              rounded-md
-              cursor-pointer
-              px-4
-              py-2
-              bg-neutral-800
-              text-white
-              hover:opacity-80
-            ">
-              <FaWalking size={20}/>
-              Analyze walkability
-            </div>
-            <div 
-            onClick={() => {}}
-            className="
-              border
-              border-black
-              flex
-              flex-row
-              gap-x-2
-              items-center
-              justify-center
-              rounded-md
-              cursor-pointer
-              px-4
-              py-2
-            ">
-              <MdCameraAlt size={20}/>
-              Scan using camera
-            </div>
+            Punya pertanyaan?
+          </div>
           </div>
         </div>
-          {/* Add display */}
+        </div>
+        <div ref={mapRef}>
+        <MapDisplay />
         </div>
         {/* custom report */}
         <IssueSection />
+        <div ref={faqRef}>
+          <FaqSection />
+        </div>
         <Footer />
-        <AnalyzeModal position={position}/>
       </div>
     </div>
   )

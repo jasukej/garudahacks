@@ -7,8 +7,8 @@ const Navbar = () => {
         fixed
         w-full 
         bg-[#D63924]
-        z-10
-        shadow-sm
+        z-20
+        shadow-md
     ">
         <div className="
             flex

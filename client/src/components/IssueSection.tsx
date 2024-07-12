@@ -6,12 +6,12 @@ const IssueSection = () => {
   return (
     <div className="
           min-h-screen
-          mb-12
+          mb-24
         ">
         <div className="
             flex 
             flex-col
-            gap-y-10
+            gap-y-16
             ">
             <IssueDisplay />
             <IssueForm />

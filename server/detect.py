@@ -59,7 +59,7 @@ def extract_class_names(results):
     for result in results: 
         for box in boxes:
             class_id = int(box.cls.type(torch.int64).item())
-            class_name = results[0].names[class_id]
+            class_name = result.names[class_id]
             class_names.append(class_name)
     return class_names
 
@@ -69,7 +69,7 @@ def detectSidewalk(imgUrl, lat, lng):
     print(img)
     
     # Detect sidewalk
-    model.set_classes(['sidewalk', 'road'])
+    model.set_classes(['sidewalk', 'road', 'no-sidewalk'])
     results = model.predict(img, conf=0.01)
     
     print(results)
@@ -79,9 +79,12 @@ def detectSidewalk(imgUrl, lat, lng):
     
     class_names = extract_class_names(results[0])
     print(f"Detected classes: {class_names}")
-
+    
+    if "no-sidewalk" in class_names:
+        return {"hasSidewalk": False}
+    
     if "sidewalk" not in class_names:
-        return {"sidewalk": False}
+        return {"hasSidewalk": False}
     
     # # Crop to sidewalk area
     # cropped_img = crop_to_sidewalk(img, results)
@@ -89,21 +92,28 @@ def detectSidewalk(imgUrl, lat, lng):
     #     return {"error": "Failed to crop sidewalk area"}
     
     # Run further detections if sidewalk detected
+    
     additional_classes = [
         "sidewalk-obstacle", 
         "overgrown-sidewalk", 
         "cracked-sidewalk", 
-        "yellow-square-path", 
+        "yellow-path", 
         "car-on-sidewalk", 
-        "street-vendor-on-sidewalk",
-        "road"
+        "motorcycle-on-sidewalk", 
+        "street-vendor"
     ]
     detailed_model.set_classes(additional_classes)
     detailed_results = details_model.predict(img, conf=0.03)
     
+    detailed_class_names = extract_class_names(detailed_results)
+    
     detections = {
-        "sidewalk": True,
-        "details": {class_name: class_name in detailed_class_names for class_name in additional_classes}
+        "hasSidewalk": "sidewalk" in class_names,
+        "hasObstacles": "sidewalk-obstacle" in detailed_class_names,
+        "hasCracks": "cracked-sidewalk" in detailed_class_names or "overgrown-sidewalk" in detailed_class_names,
+        "hasParkedVehicles": "car-on-sidewalk" in detailed_class_names or "motorcycle-on-sidewalk" in detailed_class_names,
+        "hasVendors": "stree-vendor" in detailed_class_names,
+        "hasTactilePath": "yellow-path" in detailed_class_names,
     }
     
     print(detections)
