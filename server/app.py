@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from secret import GCP_MAPS_KEY
 import pipeline
+import summarize
 
 # create an app instance
 app = Flask(__name__)
@@ -23,7 +24,19 @@ def analyze():
     except Exception as e:
         print(f"Error occurred: {e}")
         return {"error": "Failed to fetch street view images"}
+    
+@app.route('/generate_summary', methods=['POST'])
+def generate_summary():
+    data = request.json
+    print("Detections: ", data)
+    detections = data.get('detections', [])
 
+    # Generate the summary using OpenAI
+    
+    summary = summarize.generate(detections)
+    
+    return jsonify({'summary': summary})
+        
 # we run our application through this line
 if __name__ == "__app__":
     app.run(debug=True, port=8080)

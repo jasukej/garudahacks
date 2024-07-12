@@ -56,6 +56,7 @@ const generateSummary = async (detections:Detection[]) => {
         const response = await axios.post('http://localhost:8080/generate_summary', {
             detections
         });
+        console.log(response)
         return response.data.summary;
     } catch (error) {
         console.error('Error sending detections to backend:', error);
@@ -84,7 +85,8 @@ const SummarizeModal = () => {
 
     const onSubmit = useCallback(async () => {
         if (step === STEPS.SUMMARY) {
-            return summarizeModal.toggleModal;
+            setStep(0);
+            return summarizeModal.toggleModal();
         }
 
         if (location && distance) {
@@ -93,11 +95,11 @@ const SummarizeModal = () => {
                 toast.error('No detections found.');
                 return;
             }
+            console.log(detections)
             const summary = await generateSummary(detections);
             setSummary(summary);
+            onNext();
         }
-
-        onNext();
 
     }, [location, distance, step, onNext])
 
@@ -152,21 +154,72 @@ const SummarizeModal = () => {
         </div>
     )
 
-    if (step == STEPS.SUMMARY) {
+    if (step === STEPS.SUMMARY) {
+
+        const renderSummary = (title:string, content:string) => {
+            console.log(content)
+            return (
+            <div className="
+                border 
+                rounded-sm 
+                p-4 
+                flex
+                min-w-full
+                flex-row
+                mb-4"
+            >
+                <div className="
+                    font-semibold 
+                    text-lg 
+                    flex
+                    text-start
+                    min-w-[33%]
+                    mb-2"
+                >
+                    {title}
+                </div>
+                <div className="
+                    font-light
+                    flex
+                    text-start
+                ">
+                    {content}
+                </div>
+            </div>
+            )
+        };
+
+        let overallQuality = "";
+        let areaOfWeakness = "";
+        let improvements = "";
+
+        console.log(summary)
+
+        if (summary) {
+            const overallQualityMatch = summary.match(/Overall Sidewalk Quality:([^]*?)(Accessibility:|$)/);
+            const areaOfWeaknessMatch = summary.match(/Accessibility:([^]*?)(Improvements:|$)/);
+            const improvementsMatch = summary.match(/Improvements:([^]*)/);
+
+            overallQuality = overallQualityMatch ? overallQualityMatch[1].trim() : "";
+            areaOfWeakness = areaOfWeaknessMatch ? areaOfWeaknessMatch[1].trim() : "";
+            improvements = improvementsMatch ? improvementsMatch[1].trim() : "";
+        }
+
         bodyContent = (
             <div className="
                 flex 
                 flex-col 
                 gap-8"
             >
-                <div className="text-lg font-bold">Summary</div>
                 {!summary ? 
                     <div>Loading...</div>
                 :
                     <div className="
                         text-sm
                     ">
-                        {summary}
+                        {renderSummary("Overall Sidewalk Quality", overallQuality)}
+                        {renderSummary("Area of Weakness", areaOfWeakness)}
+                        {renderSummary("Improvements", improvements)}
                     </div>
                 }
             </div>
