@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { useLoginModal } from '../hooks/useLoginModal';
 import Avatar from './Avatar';
 import { MdSettings } from 'react-icons/md';
+import useAnalyzeModal from '../hooks/useAnalyzeModal';
 
 interface UserMenuProps {
     currentUser?: any | null
@@ -10,6 +11,7 @@ interface UserMenuProps {
 const UserMenu = ({ currentUser }:UserMenuProps) => {
     const [isOpen, setIsOpen] = useState(false)
     const loginModal = useLoginModal();
+    const analyzeModal = useAnalyzeModal();
 
     const onAdd = useCallback(() => {
         if(!currentUser) {
@@ -99,7 +101,9 @@ const UserMenu = ({ currentUser }:UserMenuProps) => {
                     </>       
                 ) : (
                     <>
-                        <div className="
+                        <div 
+                        onClick={analyzeModal.toggleModal}
+                        className="
                         text-black 
                         font-semibold
                         px-4

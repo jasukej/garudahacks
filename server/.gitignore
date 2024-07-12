@@ -1,5 +1,7 @@
 secret.py
 jalankami-decac-firebase-adminsdk-w6bt3-6b6f9b13a0.json
 yolov8l-worldv2.pt
+train_model.py
 venv/
 .env
+best.pt

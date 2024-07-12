@@ -27,7 +27,7 @@ def get_street_view_image(lat, lng, api_key):
     if metadata.get("status") == "OK":
         
         params_image = {
-            'size': '400x400',
+            'size': '640x640',
             'location': f'{lat},{lng}',
             'key': api_key,
             'return_error_code': "true",
@@ -49,14 +49,20 @@ def upload_image_to_firebase(image, lat, lng):
     return blob.public_url
 
 
-def add_to_firestore(lat, lng, detected_dict, image_url):
+def add_to_firestore(lat, lng, detected_dict):
     db = firebase.get_firestore_db()
-    doc_ref = db.collection('analyses').add({
-        'latitude': lat,
-        'longitude': lng,
-        'sidewalk': detected_dict['sidewalk'],
-        'details': detected_dict['details'],
-        'image_url': image_url
+    doc_ref = db.collection('detections').add({
+        'location': {
+            'latitude': lat,
+            'longitude': lng
+        },
+        'hasSidewalk': detected_dict['hasSidewalk'],
+        'hasCracks': detected_dict['hasCracks'],
+        'hasObstacles': detected_dict['hasObstacles'],
+        'hasVendors': detected_dict['hasVendors'],
+        'hasParkedVehicles': detected_dict['hasParkedVehicles'],
+        'hasTactilePath': detected_dict['hasTactilePath'],
+        'title': 'placeholder'
     })
     return doc_ref
 
@@ -68,11 +74,21 @@ def analyze_location(lat, lng, api_key):
         img_url = upload_image_to_firebase(img, lat, lng)
         detected_dict = detectSidewalk(img_url, lat, lng)
         print(detected_dict)
-        add_to_firestore(lat, lng, detected_dict, img_url)
+        
+        # add_to_firestore(lat, lng, detected_dict)
         
         return {
-            "detections": detected_dict,
-            "image_url": image_url
+            'location': {
+                'latitude': lat,
+                'longitude': lng
+            },
+            'hasSidewalk': detected_dict['hasSidewalk'],
+            'hasCracks': detected_dict['hasCracks'],
+            'hasObstacles': detected_dict['hasObstacles'],
+            'hasVendors': detected_dict['hasVendors'],
+            'hasParkedVehicles': detected_dict['hasParkedVehicles'],
+            'hasTactilePath': detected_dict['hasTactilePath'],
+            'title': 'Trotoar kurang memadai'
         }
     else:
         return {"error: Failed to fetch street view images"}

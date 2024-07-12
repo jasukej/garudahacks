@@ -23,13 +23,15 @@ const LocationSummary = () => {
             text-white
             font-semibold
             bg-red-700
+            hover:opacity-80
+            cursor-pointer
             py-2
             rounded-lg
         ">
             Buat ringkasan lokasi
     </div>
-        <div className="mt-3">
-        <div className="flex items-center mb-3 w-full">
+        <div className="mt-4">
+        <div className="flex items-center mb-4 w-full">
             <div className="flex-grow border-t border-gray-300"></div>
             <span className="mx-2 text-gray-500 text-sm ">atau coba sendiri</span>
             <div className="flex-grow border-t border-gray-300"></div>

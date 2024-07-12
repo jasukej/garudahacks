@@ -7,6 +7,7 @@ const IssueSection = () => {
     <div className="
           min-h-screen
           mb-24
+          mt-10
         ">
         <div className="
             flex 

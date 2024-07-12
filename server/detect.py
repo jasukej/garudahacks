@@ -13,8 +13,8 @@ cred = credentials.Certificate('jalankami-decac-firebase-adminsdk-w6bt3-6b6f9b13
 firebase_admin.initialize_app(cred)
 
 # Load a YOLO-World model
-model = YOLOWorld('yolov8l-worldv2.pt')
-details_model = YOLOWorld('yolov8l-worldv2.pt')
+model = YOLOWorld('best.pt')
+details_model = YOLOWorld('best.pt')
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -57,7 +57,8 @@ def get_image_from_url(image_url):
 def extract_class_names(results):
     class_names = []
     for result in results: 
-        for box in boxes:
+        print(result)
+        for box in result.boxes:
             class_id = int(box.cls.type(torch.int64).item())
             class_name = result.names[class_id]
             class_names.append(class_name)
@@ -69,7 +70,7 @@ def detectSidewalk(imgUrl, lat, lng):
     print(img)
     
     # Detect sidewalk
-    model.set_classes(['sidewalk', 'road', 'no-sidewalk'])
+    model.set_classes(['sidewalk', 'road'])
     results = model.predict(img, conf=0.01)
     
     print(results)
@@ -80,12 +81,6 @@ def detectSidewalk(imgUrl, lat, lng):
     class_names = extract_class_names(results[0])
     print(f"Detected classes: {class_names}")
     
-    if "no-sidewalk" in class_names:
-        return {"hasSidewalk": False}
-    
-    if "sidewalk" not in class_names:
-        return {"hasSidewalk": False}
-    
     # # Crop to sidewalk area
     # cropped_img = crop_to_sidewalk(img, results)
     # if not cropped_img:
@@ -94,25 +89,28 @@ def detectSidewalk(imgUrl, lat, lng):
     # Run further detections if sidewalk detected
     
     additional_classes = [
-        "sidewalk-obstacle", 
+        "obstacle", 
         "overgrown-sidewalk", 
-        "cracked-sidewalk", 
+        "crack", 
         "yellow-path", 
         "car-on-sidewalk", 
         "motorcycle-on-sidewalk", 
-        "street-vendor"
+        "street-vendors"
     ]
-    detailed_model.set_classes(additional_classes)
-    detailed_results = details_model.predict(img, conf=0.03)
+    details_model.set_classes(additional_classes)
+    details_results = details_model.predict(img, conf=0.01)
     
-    detailed_class_names = extract_class_names(detailed_results)
+    print(details_results)
+    
+    detailed_class_names = extract_class_names(details_results)
+    print(f"Detected details: {detailed_class_names}")
     
     detections = {
-        "hasSidewalk": "sidewalk" in class_names,
-        "hasObstacles": "sidewalk-obstacle" in detailed_class_names,
-        "hasCracks": "cracked-sidewalk" in detailed_class_names or "overgrown-sidewalk" in detailed_class_names,
+        "hasSidewalk": "sidewalk" in class_names or "crack" in detailed_class_names or "overgrown-sidewalk" in detailed_class_names or "yellow-path" in detailed_class_names or "street-vendors" in detailed_class_names,
+        "hasObstacles": "obstacle" in detailed_class_names,
+        "hasCracks": "crack" in detailed_class_names or "overgrown-sidewalk" in detailed_class_names,
         "hasParkedVehicles": "car-on-sidewalk" in detailed_class_names or "motorcycle-on-sidewalk" in detailed_class_names,
-        "hasVendors": "stree-vendor" in detailed_class_names,
+        "hasVendors": "street-vendors" in detailed_class_names,
         "hasTactilePath": "yellow-path" in detailed_class_names,
     }
     
