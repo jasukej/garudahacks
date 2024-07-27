@@ -1,12 +1,12 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import useSummarizeModal from '../../hooks/useSummarizeModal'
 import Modal from './Modal';
 import LocationSearch from '../LocationSearch';
 import { Location } from '../Map';
 import { Slider } from '@mantine/core';
 import { RxCross2 } from "react-icons/rx";
-import { geohashForLocation, geohashQueryBounds, distanceBetween } from 'geofire-common';
-import { collection, getDocs, query, where, limit } from 'firebase/firestore';
+import { geohashQueryBounds, distanceBetween } from 'geofire-common';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { Detection } from '../MapDisplay';
 import { ToastContainer, toast } from 'react-toastify';
@@ -217,11 +217,11 @@ const SummarizeModal = () => {
                     <div>Loading...</div>
                 :
                     <div className="
-                        text-sm
+                        text-xs
                     ">
                         {renderSummary("Overall Sidewalk Quality", overallQuality)}
                         {renderSummary("Area of Weakness", areaOfWeakness)}
-                        {renderSummary("Improvements", improvements)}
+                        {renderSummary("Improve-ments", improvements)}
                     </div>
                 }
             </div>

@@ -8,7 +8,17 @@ from detect import detectSidewalk
 firebase.initialize_firebase()
 
 def get_street_view_image(lat, lng, api_key):
-    """returns street view image url"""
+    """
+    Fetch the Google Street View image for a given location.
+
+    Args:
+        lat (float): Latitude of the location.
+        lng (float): Longitude of the location.
+        api_key (str): Google Cloud API key.
+
+    Returns:
+        PIL.Image or None: The fetched street view image, or None if the image couldn't be fetched.
+    """
     
     base_url_metadata="https://maps.googleapis.com/maps/api/streetview/metadata"
     base_url_image = "https://maps.googleapis.com/maps/api/streetview"
@@ -21,8 +31,6 @@ def get_street_view_image(lat, lng, api_key):
     # Get metadata to check if street view is even available first
     response_metadata = requests.get(base_url_metadata, params=params)
     metadata = response_metadata.json()
-    
-    print(metadata) # returning OK status
     
     if metadata.get("status") == "OK":
         
@@ -41,6 +49,17 @@ def get_street_view_image(lat, lng, api_key):
     return None
 
 def upload_image_to_firebase(image, lat, lng):
+    """
+    Upload an image to Firebase Storage.
+
+    Args:
+        image (PIL.Image): The image to upload.
+        lat (float): Latitude of the location.
+        lng (float): Longitude of the location.
+
+    Returns:
+        str: Public URL of the uploaded image.
+    """
     bucket = firebase.get_storage_bucket()
     blob = bucket.blob(f'raw/images/{lat}_{lng}.png')  # creates a new file-like object in the storage bucket where img will b stored
     image.save(f"/tmp/{lat}_{lng}.png")                # saves img to temporary file on the local file system
@@ -50,6 +69,17 @@ def upload_image_to_firebase(image, lat, lng):
 
 
 def add_to_firestore(lat, lng, detected_dict):
+    """
+    Add detection results to Firestore.
+
+    Args:
+        lat (float): Latitude of the location.
+        lng (float): Longitude of the location.
+        detected_dict (dict): Dictionary of detected features.
+
+    Returns:
+        google.cloud.firestore.DocumentReference: Firestore document reference of the added data.
+    """
     db = firebase.get_firestore_db()
     doc_ref = db.collection('detections').add({
         'location': {
@@ -67,6 +97,18 @@ def add_to_firestore(lat, lng, detected_dict):
     return doc_ref
 
 def analyze_location(lat, lng, api_key):
+    """
+    Analyze a location for pedestrian accessibility issues, route to detect.py
+
+    Args:
+        lat (float): Latitude of the location.
+        lng (float): Longitude of the location.
+        api_key (str): Google Cloud API key.
+
+    Returns:
+        dict: Analysis results including detected features and image URL.
+    """
+    
     img = get_street_view_image(lat, lng, api_key)
     print(img) # prints None
     if img: 
@@ -74,8 +116,6 @@ def analyze_location(lat, lng, api_key):
         img_url = upload_image_to_firebase(img, lat, lng)
         detected_dict = detectSidewalk(img_url, lat, lng)
         print(detected_dict)
-        
-        # add_to_firestore(lat, lng, detected_dict)
         
         return {
             'location': {

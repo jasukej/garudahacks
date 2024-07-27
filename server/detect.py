@@ -18,25 +18,35 @@ details_model = YOLOWorld('best.pt')
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
-# def crop_to_sidewalk(image, results):
-#     for result in results:
-#         for obj in result['pred']:
-#             if obj['name'] == 'sidewalk':
-#                 bbox = obj['box']
-#                 x1, y1, x2, y2 = bbox[0], bbox[1], bbox[2], bbox[3]
-#                 cropped_image = image.crop((x1, y1, x2, y2))
-#                 return cropped_image
-#     return None
-
 def upload_image_to_firebase(image, lat, lng):
+    """
+    Uploads an image to Firebase Storage and makes it public.
+
+    Args:
+        image (PIL.Image): The image to upload.
+        lat (float): Latitude of the image location.
+        lng (float): Longitude of the image location.
+
+    Returns:
+        str: Public URL of the uploaded image.
+    """
     bucket = firebase.get_storage_bucket()
-    blob = bucket.blob(f'annotated/images/{lat}_{lng}.png')  # creates a new file-like object in the storage bucket where img will b stored
-    image.save(f"/tmp/{lat}_{lng}.png")                # saves img to temporary file on the local file system
-    blob.upload_from_filename(f"/tmp/{lat}_{lng}.png") # uploads file to blob in storage
+    blob = bucket.blob(f'annotated/images/{lat}_{lng}.png')  
+    image.save(f"/tmp/{lat}_{lng}.png")                
+    blob.upload_from_filename(f"/tmp/{lat}_{lng}.png")
     blob.make_public()
     return blob.public_url
 
 def get_image_from_url(image_url):
+    """
+    Fetches an image from a URL.
+
+    Args:
+        image_url (str): URL of the image.
+
+    Returns:
+        PIL.Image or None: Image object if successful, otherwise None.
+    """
     response = requests.get(image_url)
     print(f"Fetching image from URL: {image_url}")
     print(f"Response status code: {response.status_code}")
@@ -55,6 +65,15 @@ def get_image_from_url(image_url):
         return None
 
 def extract_class_names(results):
+    """
+    Extracts class names from YOLO-World model results.
+
+    Args:
+        results (list): Results from the YOLO-World model.
+
+    Returns:
+        list: List of class names.
+    """
     class_names = []
     for result in results: 
         print(result)
@@ -65,7 +84,17 @@ def extract_class_names(results):
     return class_names
 
 def detectSidewalk(imgUrl, lat, lng):
-    
+    """
+    Detects sidewalks and additional details from an image.
+
+    Args:
+        imgUrl (str): URL of the image.
+        lat (float): Latitude of the image location.
+        lng (float): Longitude of the image location.
+
+    Returns:
+        dict: Detection results.
+    """
     img = get_image_from_url(imgUrl)
     print(img)
     
@@ -80,13 +109,6 @@ def detectSidewalk(imgUrl, lat, lng):
     
     class_names = extract_class_names(results[0])
     print(f"Detected classes: {class_names}")
-    
-    # # Crop to sidewalk area
-    # cropped_img = crop_to_sidewalk(img, results)
-    # if not cropped_img:
-    #     return {"error": "Failed to crop sidewalk area"}
-    
-    # Run further detections if sidewalk detected
     
     additional_classes = [
         "obstacle", 

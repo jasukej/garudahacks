@@ -1,16 +1,16 @@
 import { GoogleMap, Marker, StandaloneSearchBox, useJsApiLoader } from '@react-google-maps/api';
-import React, { useCallback, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { FaLocationDot } from 'react-icons/fa6';
 import { MdMyLocation } from 'react-icons/md';
 
 const containerStyle = {
-    width: '100%',
-    height: '60vh'
+  width: '100%',
+  height: '60vh'
 };
 
 const defaultCenter = {
-    lat: -6.21154400,
-    lng: 106.84517200
+  lat: -6.21154400,
+  lng: 106.84517200
 };
 
 const options = {
